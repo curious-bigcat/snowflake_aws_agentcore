@@ -10,7 +10,7 @@ create stage docs ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
 create stage data ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
 
 -- 3. (Optional) Allow all IPs for testing (not for production)
-CREATE NETWORK POLICY allow_all_policy ALLOWED_IP_LIST = ('0.0.0.0/0');
+CREATE NETWORK POLICY allow_all_policy ALLOWED_IP_LIST = ('');
 ALTER USER <your_user> SET NETWORK_POLICY = allow_all_policy;
 
 -- 4. Upload data files to @data stage (flight_data.csv, hotel_data.csv, Travel_Plan_Guide.pdf)
