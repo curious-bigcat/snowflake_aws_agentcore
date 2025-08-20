@@ -1,0 +1,86 @@
+default_agent: all_in_one_travel_agent
+agents:
+  travel_planning_agent:
+    name: travel_planning_agent
+    entrypoint: travel_planning_agent.py
+    platform: linux/arm64
+    container_runtime: docker
+    aws:
+      execution_role: arn:aws:iam::484577546576:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-464c700a83
+      execution_role_auto_create: false
+      account: '484577546576'
+      region: us-east-1
+      ecr_repository: 484577546576.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-travel_planning_agent
+      ecr_auto_create: true
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: travel_planning_agent-mGfMFn8Ab8
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:484577546576:runtime/travel_planning_agent-mGfMFn8Ab8
+      agent_session_id: fef16f1f-818c-47e3-8406-f1a3ecc030fd
+    codebuild:
+      project_name: bedrock-agentcore-travel_planning_agent-builder
+      execution_role: arn:aws:iam::484577546576:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-2c7ae7f7c3
+      source_bucket: bedrock-agentcore-codebuild-sources-484577546576-us-east-1
+    authorizer_configuration: null
+    oauth_configuration: null
+  prod_snowflake_agent:
+    name: prod_snowflake_agent
+    entrypoint: sample_snowflake.py
+    platform: linux/arm64
+    container_runtime: docker
+    aws:
+      execution_role: arn:aws:iam::484577546576:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-464c700a83
+      execution_role_auto_create: false
+      account: '484577546576'
+      region: us-east-1
+      ecr_repository: 484577546576.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-prod_snowflake_agent
+      ecr_auto_create: true
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: null
+      agent_arn: null
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-prod_snowflake_agent-builder
+      execution_role: arn:aws:iam::484577546576:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-464c700a83
+      source_bucket: bedrock-agentcore-codebuild-sources-484577546576-us-east-1
+    authorizer_configuration: null
+    oauth_configuration: null
+  all_in_one_travel_agent:
+    name: all_in_one_travel_agent
+    entrypoint: all_in_one_travel_agent.py
+    platform: linux/arm64
+    container_runtime: docker
+    aws:
+      execution_role: arn:aws:iam::484577546576:role/AgentRuntimeRole
+      execution_role_auto_create: true
+      account: '484577546576'
+      region: us-east-1
+      ecr_repository: 484577546576.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-all_in_one_travel_agent
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: all_in_one_travel_agent-ttBgfoHPAQ
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:484577546576:runtime/all_in_one_travel_agent-ttBgfoHPAQ
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-all_in_one_travel_agent-builder
+      execution_role: arn:aws:iam::484577546576:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-17e8172965
+      source_bucket: bedrock-agentcore-codebuild-sources-484577546576-us-east-1
+    authorizer_configuration: null
+    oauth_configuration: null

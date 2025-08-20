@@ -1,0 +1,7 @@
+strands-agents
+bedrock-agentcore
+snowflake-connector-python
+python-dotenv
+snowflake-core
+snowflake-snowpark-python
+fastapi

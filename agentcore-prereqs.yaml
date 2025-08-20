@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Minimal prerequisites for Bedrock AgentCore Travel Planner (IAM role and ECR only)
+
+Resources:
+  AgentCoreExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: AgentRuntimeRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - bedrock-agentcore.amazonaws.com
+                - codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AgentCorePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                  - ecr:CreateRepository
+                  - logs:*
+                  - bedrock:*
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                  - secretsmanager:GetSecretValue
+                Resource: "*"
+
+  AgentECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: bedrock-agentcore-all_in_one_travel_agent
+
+Outputs:
+  ExecutionRoleArn:
+    Value: !GetAtt AgentCoreExecutionRole.Arn
+    Description: ARN of the AgentCore execution role
+
+  ECRRepositoryUri:
+    Value: !GetAtt AgentECRRepository.RepositoryUri
+    Description: URI of the ECR repository
