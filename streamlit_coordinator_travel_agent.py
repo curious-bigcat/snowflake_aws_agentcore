@@ -1,12 +1,27 @@
-import os, json, requests, pandas as pd, streamlit as st, ast
+import os, json, requests, pandas as pd, streamlit as st
+import uuid, boto3
 
 st.set_page_config("Travel Planner AI", "🧳", layout="centered")
-# Set AGENT_ENDPOINT to the AWS Bedrock AgentCore Runtime endpoint for cloud deployment
-AGENT_ENDPOINT = os.getenv("AGENT_ENDPOINT")
 
-if not AGENT_ENDPOINT:
-    st.error("AGENT_ENDPOINT environment variable is not set. Please set it to your Bedrock AgentCore Runtime endpoint (e.g., https://<your-bedrock-agentcore-endpoint>/invocations)")
-    st.stop()
+# --- Region selection ---
+def get_region():
+    region = os.environ.get("AWS_REGION")
+    if not region:
+        region = st.sidebar.text_input("AWS Region", value="us-east-1", key="region_input")
+    return region or "us-east-1"
+
+REGION = get_region()
+
+def get_agentcore_client(region_name=None):
+    region = region_name or REGION
+    return boto3.client("bedrock-agentcore", region_name=region)
+
+# --- Prompt for Agent ARN ---
+agent_arn = st.sidebar.text_input("Agent ARN (from AWS Console or CLI):", value="", key="agent_arn_input")
+
+# --- Session Management ---
+if "runtime_session_id" not in st.session_state:
+    st.session_state.runtime_session_id = str(uuid.uuid4())
 
 # ---------- Styles ----------
 st.markdown(
@@ -54,79 +69,88 @@ def dfshow(name: str, rows):
         with st.expander(name):
             st.dataframe(pd.DataFrame(rows))
 
-def safe_get(d, key):
-    """Safe dict access. If d is a dict → return d[key], else wrap string into dict."""
-    if isinstance(d, dict):
-        return d.get(key, {})
-    if isinstance(d, str):
-        return {"raw": d}
-    return {}
-
 # ---------- Submit Flow ----------
+resp, raw, data = None, None, None
 if submitted:
-    try:
-        with st.spinner("Planning your trip…"):
-            resp = requests.post(AGENT_ENDPOINT, json={"prompt": prompt}, timeout=300)
-
-        # --- normalize backend response into dict ---
+    if not agent_arn:
+        st.error("Agent ARN is required to invoke the agent. Please provide it above.")
+    else:
         try:
-            raw = resp.json()
-        except Exception:
-            raw = resp.text
-
-        if isinstance(raw, str):
-            try:
-                data = json.loads(raw)       # JSON string
-            except Exception:
-                try:
-                    data = ast.literal_eval(raw)  # Python dict string
-                except Exception:
+            with st.spinner("Planning your trip…"):
+                client = get_agentcore_client(REGION)
+                payload = json.dumps({"prompt": prompt}).encode()
+                response = client.invoke_agent_runtime(
+                    agentRuntimeArn=agent_arn,
+                    runtimeSessionId=st.session_state.runtime_session_id,
+                    payload=payload
+                )
+                content_type = response.get("contentType", "")
+                if "text/event-stream" in content_type:
+                    content = []
+                    for line in response["response"].iter_lines(chunk_size=10):
+                        if line:
+                            line = line.decode("utf-8")
+                            if line.startswith("data: "):
+                                line = line[6:]
+                                content.append(line)
+                    raw = "\n".join(content)
+                    try:
+                        data = json.loads("".join(content))
+                    except Exception:
+                        data = {"raw": raw}
+                elif content_type == "application/json":
+                    raw = "".join([chunk.decode("utf-8") for chunk in response.get("response", [])])
+                    try:
+                        data = json.loads(raw)
+                    except Exception:
+                        data = {"raw": raw}
+                else:
+                    raw = str(response)
                     data = {"raw": raw}
-        else:
-            data = raw
-
-        tabs = st.tabs(["✈️ Flights", "🏨 Hotels", "🗺️ Guide", "🧾 Raw"])
-
-        # --- Flight ---
-        with tabs[0]:
-            flight = safe_get(data, "flight")
-            rec = flight.get("best_flight_recommendation") or flight.get("raw")
-            if rec: card("Best Flight Recommendation", rec)
-            for seg in (flight.get("segments") or []):
-                res = (seg or {}).get("result", {})
-                dfshow(f"Flight Table: {seg.get('from','')} → {seg.get('to','')}", res.get("sql_result"))
-
-        # --- Hotel ---
-        with tabs[1]:
-            hotel = safe_get(data, "hotel")
-            rec = hotel.get("best_hotel_recommendation") or hotel.get("raw")
-            if rec: card("Best Hotel Recommendation", rec)
-            dfshow("Hotel Table", hotel.get("sql_result"))
-
-        # --- Guide ---
-        with tabs[2]:
-            guide = safe_get(data, "guide")
-            plan = guide.get("daywise_plan") or guide.get("raw")
-            if plan: card("Day-wise Plan", plan)
-            results = guide.get("results")
-            rows = results.get("data") if isinstance(results, dict) and "data" in results else (results if isinstance(results, list) else [])
-            dfshow("Guide Search Results Table", rows)
-
-        # --- Raw ---
-        with tabs[3]:
-            st.json(data)
-    except Exception as e:
-        st.error(f"Request failed: {e}")
+        except Exception as e:
+            st.error(f"Request failed: {e}")
 
 # --- Debug: show raw response ---
-if submitted:
-    st.subheader("🔎 Debug: Backend Response")
-    st.write("Status Code:", resp.status_code)
-    st.write("Raw Response:", raw)
-    st.json(data)
+if submitted and raw is not None:
+    with st.expander("🔎 Debug: Backend Response", expanded=False):
+        st.write("Session ID:", st.session_state.runtime_session_id)
+        st.write("Agent ARN:", agent_arn)
+        st.write("Raw Response:", raw)
+        if data: st.json(data)
 
 # ---------- Footer ----------
 st.markdown(
     "<div class='foot'>© 2025 Travel Planner AI — Powered by AWS Bedrock AgentCore, AWS Strands, Snowflake Data Cloud & Cortex AI</div>",
     unsafe_allow_html=True,
 )
+
+# ---------- Main Display ----------
+if data:
+    best = data.get("best_trip_recommendation")
+    raw_context = data.get("raw_context")
+
+    if best:
+        card("🌍 Best Trip Recommendation", best)
+
+    if raw_context:
+        tabs = st.tabs(["✈️ Flights", "🏨 Hotels", "🗺️ Guide", "🧾 Raw"])
+        # --- Flights ---
+        with tabs[0]:
+            flights = raw_context.get("flights", [])
+            for idx, f in enumerate(flights):
+                card(f"Flight Segment {idx+1}", f.get("analyst_text", ""))
+                dfshow("Flight SQL Results", f.get("sql_result"))
+        # --- Hotels ---
+        with tabs[1]:
+            hotels = raw_context.get("hotels", [])
+            for idx, h in enumerate(hotels):
+                card(f"Hotel Query {idx+1}", h.get("analyst_text", ""))
+                dfshow("Hotel SQL Results", h.get("sql_result"))
+        # --- Guide ---
+        with tabs[2]:
+            guide = raw_context.get("guide", {})
+            plan = guide.get("results") or []
+            dfshow("Guide Search Results", plan.get("results") if isinstance(plan, dict) else plan)
+        # --- Raw ---
+        with tabs[3]:
+            st.json(raw_context)

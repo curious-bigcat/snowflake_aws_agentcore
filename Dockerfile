@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.11-slim
+FROM public.ecr.aws/docker/library/python:3.10-slim
 WORKDIR /app
 
 
@@ -34,4 +34,4 @@ COPY . .
 
 # Use the full module path
 
-CMD ["opentelemetry-instrument", "python", "-m", "all_in_one_travel_agent"]
+CMD ["opentelemetry-instrument", "python", "-m", "my_new_travel_agent"]

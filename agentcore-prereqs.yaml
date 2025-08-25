@@ -42,7 +42,7 @@ Resources:
   AgentECRRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: bedrock-agentcore-all_in_one_travel_agent
+      RepositoryName: bedrock-agentcore-my_new_travel_agent
 
 Outputs:
   ExecutionRoleArn:

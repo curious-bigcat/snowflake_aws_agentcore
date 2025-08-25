@@ -5,3 +5,4 @@ python-dotenv
 snowflake-core
 snowflake-snowpark-python
 fastapi
+boto3

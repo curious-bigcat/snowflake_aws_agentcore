@@ -1,5 +1,5 @@
 agents:
-  - name: all_in_one_travel_agent
+  - name: my_new_travel_agent
     entrypoint: all_in_one_travel_agent.py
     model: ${MODEL_ID}
     env:
