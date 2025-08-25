@@ -1,3 +1,5 @@
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 # Travel Planner AI
 
 ## Overview
@@ -171,3 +173,36 @@ Pull requests and issues are welcome! Please ensure code is well-documented and 
 
 ## License
 [MIT License](LICENSE)
+
+## Quickstart
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/curious-bigcat/agentcore_snowflake.git
+   cd agentcore_snowflake/agentcore
+   ```
+
+2. Set up your Python environment and install dependencies:
+   ```sh
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+3. Configure your environment variables in `.env` or via export commands.
+
+4. Run the agent and Streamlit UI as described above.
+
+---
+
+## User Feedback
+
+The Streamlit UI allows users to provide feedback on flight and hotel recommendations using 👍 and 👎 buttons. This helps improve the quality of recommendations and user experience.
+
+---
+
+## How to Contribute
+
+1. Fork the repository and create your branch from `main`.
+2. Make your changes and ensure all tests pass.
+3. Submit a pull request describing your changes.
