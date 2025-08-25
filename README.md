@@ -14,15 +14,24 @@
 
 ---
 
-## Badges
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)]()
-[![AWS](https://img.shields.io/badge/deploys%20to-AWS%20Bedrock%20AgentCore-orange)]()
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Demo](#demo)
+- [Project Structure](#project-structure)
+- [Setup & Deployment](#setup--deployment)
+- [Security & Best Practices](#security--best-practices)
+- [Troubleshooting & FAQ](#troubleshooting--faq)
+- [User Feedback](#user-feedback)
+- [Contributing & Support](#contributing--support)
+- [Contact](#contact)
+- [License](#license)
 
 ---
 
 ## Overview
-Travel Planner AI is a robust, production-ready, multi-agent travel planning system. It generates complete, data-driven travel itineraries—including flights, hotels, and day-wise plans—from a single user prompt. The system leverages:
+Travel Planner AI is a robust, production-ready, multi-agent travel planning system for enterprises and advanced users. It generates complete, data-driven travel itineraries—including flights, hotels, and day-wise plans—from a single user prompt. The system leverages:
 - **LLMs (Anthropic Claude via AWS Bedrock)** for intent extraction, reasoning, and plan generation
 - **Snowflake Cortex Analyst & Search** for real-time flight/hotel data and semantic travel guide search
 - **AWS Bedrock AgentCore** for secure, scalable orchestration
@@ -65,6 +74,11 @@ This solution is designed for both enterprise and open-source deployments, with 
 
 ---
 
+## Demo
+> _Add screenshots or a link to a demo video here to showcase the UI and workflow._
+
+---
+
 ## Project Structure
 ```
 agentcore/
@@ -84,7 +98,7 @@ agentcore/
 
 ## Setup & Deployment
 
-### 1. **Snowflake Setup**
+### 1. Snowflake Setup
 - Follow [`snowflake_setup_worksheet.sql`](./snowflake_setup_worksheet.sql) to:
   - Create the database, stages, and network policy
   - Upload and load your flight/hotel CSVs and travel guide PDF
@@ -92,7 +106,7 @@ agentcore/
   - Parse and chunk the travel guide for Cortex Search
   - Create the Cortex Search service
 
-### 2. **CloudFormation Prerequisites**
+### 2. CloudFormation Prerequisites
 - Deploy the stack to create IAM role, ECR repo, and a Secrets Manager secret:
   ```sh
   aws cloudformation create-stack \
@@ -106,7 +120,7 @@ agentcore/
   - `ECRRepositoryUri`: Used internally by agentcore
   - `AgentCoreSecretArn`: Use as `AGENTCORE_SECRET_NAME` env var
 
-### 3. **Local Development & Testing**
+### 3. Local Development & Testing
 - Clone the repo and set up your Python environment:
   ```sh
   git clone https://github.com/curious-bigcat/agentcore_snowflake.git
@@ -131,7 +145,7 @@ agentcore/
   streamlit run streamlit_coordinator_travel_agent.py
   ```
 
-### 4. **Cloud Deployment: AWS Bedrock AgentCore**
+### 4. Cloud Deployment: AWS Bedrock AgentCore
 - Configure and launch:
   ```sh
   agentcore configure --entrypoint my_new_travel_agent.py -er <YOUR_EXECUTION_ROLE_ARN>
@@ -184,6 +198,11 @@ The Streamlit UI allows users to provide feedback on flight and hotel recommenda
 - Submit a pull request describing your changes.
 - For issues, use GitHub Issues or Discussions.
 - For enterprise support, contact the project maintainer.
+
+---
+
+## Contact
+For enterprise inquiries, partnerships, or support, please contact the project maintainer via GitHub or [Snowflake Inc.](https://www.snowflake.com/en/).
 
 ---
 
