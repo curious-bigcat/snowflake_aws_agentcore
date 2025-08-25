@@ -1,4 +1,8 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)]()
+[![AWS](https://img.shields.io/badge/deploys%20to-AWS%20Bedrock%20AgentCore-orange)]()
+[![Snowflake](https://img.shields.io/badge/data%20source-Snowflake-blue)]()
 
 # Travel Planner AI – Enterprise-Grade Multi-Agent Travel Planning
 
