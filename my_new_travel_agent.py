@@ -37,9 +37,9 @@ def try_load_secrets():
     if secret_name:
         secrets = load_secrets_from_aws(secret_name)
         if secrets:
-            print("✅ Loaded secrets from Secrets Manager:", list(secrets.keys()))
+            print("Loaded secrets from Secrets Manager:", list(secrets.keys()))
         else:
-            print("⚠️ No secrets loaded, check Secret ARN or IAM permissions")
+            print("No secrets loaded, check Secret ARN or IAM permissions")
 
 
 # --- MUST load secrets before anything else ---
@@ -50,7 +50,7 @@ try_load_secrets()
 MODEL_ID = os.getenv('MODEL_ID', 'us.anthropic.claude-3-7-sonnet-20250219-v1:0')
 SNOWFLAKE_ACCOUNT = os.getenv("SNOWFLAKE_ACCOUNT")
 if not SNOWFLAKE_ACCOUNT:
-    raise ValueError("❌ SNOWFLAKE_ACCOUNT is not set. Check Secrets Manager config.")
+    raise ValueError("SNOWFLAKE_ACCOUNT is not set. Check Secrets Manager config.")
 
 SNOWFLAKE_USER = os.getenv("SNOWFLAKE_USER")
 SNOWFLAKE_PASSWORD = os.getenv("SNOWFLAKE_PASSWORD")
@@ -213,7 +213,7 @@ def run_cortex_search(dests, user_input):
 def trip_recommendation_agent(user_input):
     travel = extract_trip_details(user_input)
     if not travel:
-        return {"error": "❌ Could not extract trip details from input."}
+        return {"error": "Could not extract trip details from input."}
 
     source = travel["source_city"]
     dests = travel["destination_cities"]
@@ -235,7 +235,7 @@ def trip_recommendation_agent(user_input):
         "guide": guide
     }
 
-    # ✅ Make everything JSON safe
+    # Make everything JSON safe
     safe_context = make_json_safe(context)
 
     system_prompt = (
@@ -251,7 +251,7 @@ def trip_recommendation_agent(user_input):
     try:
         best_plan = str(Agent(model=MODEL_ID, system_prompt=system_prompt)(json.dumps(safe_context)))
     except Exception as e:
-        best_plan = f"❌ Could not generate final recommendation: {e}"
+        best_plan = f"Could not generate final recommendation: {e}"
 
     return {"best_trip_recommendation": best_plan, "raw_context": safe_context}
 

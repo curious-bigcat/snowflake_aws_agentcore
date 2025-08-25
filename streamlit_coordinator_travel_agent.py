@@ -1,7 +1,7 @@
 import os, json, requests, pandas as pd, streamlit as st
 import uuid, boto3
 
-st.set_page_config("Travel Planner AI", "🧳", layout="centered")
+st.set_page_config("Travel Planner AI", "", layout="centered")
 
 # --- Region selection ---
 def get_region():
@@ -43,7 +43,7 @@ st.markdown(
 st.markdown(
     """
     <div class="wrap">
-      <div class="title">🧳 Travel Planner 
+      <div class="title">Travel Planner 
         <span style="font:700 .8rem system-ui;color:#1d4ed8;background:#eef2ff;
         border:1px solid #dbeafe;border-radius:999px;padding:2px 8px">
         AI Assistant</span>
@@ -112,7 +112,7 @@ if submitted:
 
 # --- Debug: show raw response ---
 if submitted and raw is not None:
-    with st.expander("🔎 Debug: Backend Response", expanded=False):
+    with st.expander("Debug: Backend Response", expanded=False):
         st.write("Session ID:", st.session_state.runtime_session_id)
         st.write("Agent ARN:", agent_arn)
         st.write("Raw Response:", raw)
@@ -130,10 +130,10 @@ if data:
     raw_context = data.get("raw_context")
 
     if best:
-        card("🌍 Best Trip Recommendation", best)
+        card("Best Trip Recommendation", best)
 
     if raw_context:
-        tabs = st.tabs(["✈️ Flights", "🏨 Hotels", "🗺️ Guide", "🧾 Raw"])
+        tabs = st.tabs(["Flights", "Hotels", "Guide", "Raw"])
         # --- Flights ---
         with tabs[0]:
             flights = raw_context.get("flights", [])
