@@ -1,3 +1,9 @@
+<p align="left">
+  <a href="https://www.snowflake.com/en/" target="_blank">
+    <img src="https://assets.snowflake.com/image/upload/f_auto,q_auto/v1/website-prod/logos/snowflake-logo-blue.png" alt="Snowflake Logo" height="48"/>
+  </a>
+</p>
+
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)]()
