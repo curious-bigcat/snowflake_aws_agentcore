@@ -32,7 +32,7 @@ def load_secrets_from_aws(secret_name, region_name=None):
 def try_load_secrets():
     secret_name = os.environ.get(
         'AGENTCORE_SECRET_NAME',
-        'arn:aws:secretsmanager:us-east-1:484577546576:secret:agentcore/env-VLoLfK'
+        'arn:aws:secretsmanager:us-east-1:484577546576:secret:agentcore/travelplanner/credentials-hmfGXv'
     )
     if secret_name:
         secrets = load_secrets_from_aws(secret_name)

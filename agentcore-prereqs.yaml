@@ -1,5 +1,51 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Minimal prerequisites for Bedrock AgentCore Travel Planner (IAM role and ECR only)
+Description: Minimal prerequisites for Bedrock AgentCore Travel Planner (IAM role, ECR, and Secrets Manager)
+
+Parameters:
+  ModelId:
+    Type: String
+    Description: Claude model ID for Bedrock
+  SnowflakeAccount:
+    Type: String
+    Description: Snowflake account identifier
+  SnowflakeUser:
+    Type: String
+    Description: Snowflake username
+  SnowflakePassword:
+    Type: String
+    NoEcho: true
+    Description: Snowflake password (hidden)
+  SnowflakeDatabase:
+    Type: String
+    Description: Snowflake database name
+  SnowflakeSchema:
+    Type: String
+    Description: Snowflake schema name
+  SnowflakeWarehouse:
+    Type: String
+    Description: Snowflake warehouse name
+  CortexAnalystUrl:
+    Type: String
+    Description: Cortex Analyst API URL
+  SemanticModelFile:
+    Type: String
+    Description: Path to flight semantic model file
+  HotelSemanticModelFile:
+    Type: String
+    Description: Path to hotel semantic model file
+  CortexSearchDatabase:
+    Type: String
+    Description: Cortex search database
+  CortexSearchSchema:
+    Type: String
+    Description: Cortex search schema
+  CortexSearchService:
+    Type: String
+    Description: Cortex search service
+  SnowflakeAuthToken:
+    Type: String
+    NoEcho: true
+    Description: Snowflake auth token (hidden)
 
 Resources:
   AgentCoreExecutionRole:
@@ -44,6 +90,29 @@ Resources:
     Properties:
       RepositoryName: bedrock-agentcore-my_new_travel_agent
 
+  AgentCoreSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: agentcore/travelplanner/credentials
+      Description: Secrets for Bedrock AgentCore Travel Planner (Snowflake, API keys, etc.)
+      SecretString: !Sub |
+        {
+          "MODEL_ID": "${ModelId}",
+          "SNOWFLAKE_ACCOUNT": "${SnowflakeAccount}",
+          "SNOWFLAKE_USER": "${SnowflakeUser}",
+          "SNOWFLAKE_PASSWORD": "${SnowflakePassword}",
+          "SNOWFLAKE_DATABASE": "${SnowflakeDatabase}",
+          "SNOWFLAKE_SCHEMA": "${SnowflakeSchema}",
+          "SNOWFLAKE_WAREHOUSE": "${SnowflakeWarehouse}",
+          "CORTEX_ANALYST_URL": "${CortexAnalystUrl}",
+          "SEMANTIC_MODEL_FILE": "${SemanticModelFile}",
+          "HOTEL_SEMANTIC_MODEL_FILE": "${HotelSemanticModelFile}",
+          "CORTEX_SEARCH_DATABASE": "${CortexSearchDatabase}",
+          "CORTEX_SEARCH_SCHEMA": "${CortexSearchSchema}",
+          "CORTEX_SEARCH_SERVICE": "${CortexSearchService}",
+          "SNOWFLAKE_AUTH_TOKEN": "${SnowflakeAuthToken}"
+        }
+
 Outputs:
   ExecutionRoleArn:
     Value: !GetAtt AgentCoreExecutionRole.Arn
@@ -52,3 +121,7 @@ Outputs:
   ECRRepositoryUri:
     Value: !GetAtt AgentECRRepository.RepositoryUri
     Description: URI of the ECR repository
+
+  AgentCoreSecretArn:
+    Value: !Ref AgentCoreSecret
+    Description: ARN of the AgentCore secret in Secrets Manager
