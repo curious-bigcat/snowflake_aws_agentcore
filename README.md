@@ -1,6 +1,6 @@
 <p align="left">
   <a href="https://www.snowflake.com/en/" target="_blank">
-    <img src="https://assets.snowflake.com/image/upload/f_auto,q_auto/v1/website-prod/logos/snowflake-logo-blue.png" alt="Snowflake Logo" height="48"/>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg" alt="Snowflake Logo" height="48"/>
   </a>
 </p>
 
