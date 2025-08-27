@@ -31,25 +31,30 @@
 ---
 
 ## Overview
+
 Travel Planner AI is a robust, production-ready, multi-agent travel planning system for enterprises and advanced users. It generates complete, data-driven travel itineraries—including flights, hotels, and day-wise plans—from a single user prompt. The system leverages:
+
 - **LLMs (Anthropic Claude via AWS Bedrock)** for intent extraction, reasoning, and plan generation
 - **Snowflake Cortex Analyst & Search** for real-time flight/hotel data and semantic travel guide search
 - **AWS Bedrock AgentCore** for secure, scalable orchestration
 - **Streamlit** for a modern, interactive frontend
 
-This solution is designed for both enterprise and open-source deployments, with a focus on security, modularity, and extensibility.
+**Recent Update:**  
+The codebase has been aggressively optimized and condensed for clarity, maintainability, and performance. The UI is now even more modern and professional, and the backend agent logic is highly modular and efficient.
 
 ---
 
 ## Features
+
 - **Unified Prompt:** Enter your travel needs in natural language; get flights, hotels, and a day-wise itinerary.
 - **Multi-city, Round-trip Support:** Handles complex itineraries and user preferences.
 - **LLM-Powered Recommendations:** Uses Claude for intent extraction, reasoning, and plan generation.
 - **Live Data:** Queries real-time flight/hotel data and travel guides from Snowflake.
-- **Modern UI:** Streamlit frontend with tabs, tables, and professional design.
+- **Modern, Minimal UI:** Streamlit frontend with tabs, tables, and a professional, condensed design.
 - **Cloud-Native:** Deployable to AWS Bedrock AgentCore for production use.
 - **Secure Secrets Management:** Uses AWS Secrets Manager for all credentials and sensitive config.
 - **User Feedback:** Collects thumbs up/down feedback on recommendations for continuous improvement.
+- **Highly Maintainable:** The codebase is now extremely concise, with all repetitive logic factored out and helpers inlined where possible.
 
 ---
 
@@ -80,10 +85,11 @@ This solution is designed for both enterprise and open-source deployments, with 
 ---
 
 ## Project Structure
+
 ```
 agentcore/
-├── my_new_travel_agent.py              # Main agent code (BedrockAgentCoreApp)
-├── streamlit_coordinator_travel_agent.py # Streamlit UI
+├── my_new_travel_agent.py              # Main agent code (BedrockAgentCoreApp, highly condensed)
+├── streamlit_coordinator_travel_agent.py # Streamlit UI (modern, minimal, and optimized)
 ├── requirements.txt                   # Python dependencies
 ├── bedrock_agentcore.yaml             # AgentCore config
 ├── Dockerfile                         # For container builds
