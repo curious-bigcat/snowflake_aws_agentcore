@@ -144,7 +144,4 @@ agentcore/
 - **Snowflake connection errors**
   - Double-check all Snowflake credentials and network access.
 
----
 
-## License
-[MIT License](LICENSE)
